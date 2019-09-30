@@ -56,14 +56,19 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void setOneTimeAlarm(Context context, String type, String date, String time, String message) {
         String DATE_FORMAT = "yyyy-MM-dd";
         String TIME_FORMAT = "HH:mm";
-        if (isDateInvalid(date, DATE_FORMAT) || isDateInvalid(time, TIME_FORMAT)) return;
+
+        if (isDateInvalid(date, DATE_FORMAT) || isDateInvalid(time, TIME_FORMAT))
+            return;
+
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra(EXTRA_MESSAGE, message);
         intent.putExtra(EXTRA_TYPE, type);
         Log.e("ONE TIME", date + " " + time);
+
         String dateArray[] = date.split("-");
         String timeArray[] = time.split(":");
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, Integer.parseInt(dateArray[0]));
         calendar.set(Calendar.MONTH, Integer.parseInt(dateArray[1]) - 1);
@@ -71,10 +76,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeArray[0]));
         calendar.set(Calendar.MINUTE, Integer.parseInt(timeArray[1]));
         calendar.set(Calendar.SECOND, 0);
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, ID_ONETIME, intent, 0);
         if (alarmManager != null) {
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
+
         Toast.makeText(context, "One time alarm set up", Toast.LENGTH_SHORT).show();
     }
     public boolean isDateInvalid(String date, String format) {
@@ -91,8 +98,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     private void showAlarmNotification(Context context, String title, String message, int notifId) {
         String CHANNEL_ID = "Channel_1";
         String CHANNEL_NAME = "AlarmManager channel";
+
         NotificationManager notificationManagerCompat = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_access_time_black)
                 .setContentTitle(title)
@@ -100,6 +109,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setColor(ContextCompat.getColor(context, android.R.color.transparent))
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setSound(alarmSound);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                     CHANNEL_NAME,
@@ -107,10 +117,12 @@ public class AlarmReceiver extends BroadcastReceiver {
             channel.enableVibration(true);
             channel.setVibrationPattern(new long[]{1000, 1000, 1000, 1000, 1000});
             builder.setChannelId(CHANNEL_ID);
+
             if (notificationManagerCompat != null) {
                 notificationManagerCompat.createNotificationChannel(channel);
             }
         }
+
         Notification notification = builder.build();
         if (notificationManagerCompat != null) {
             notificationManagerCompat.notify(notifId, notification);

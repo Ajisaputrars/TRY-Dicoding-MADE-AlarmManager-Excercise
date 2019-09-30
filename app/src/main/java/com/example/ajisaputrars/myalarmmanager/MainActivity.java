@@ -13,7 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,DatePickerFragment.DialogDateListener, TimePickerFragment.DialogTimeListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        DatePickerFragment.DialogDateListener,
+        TimePickerFragment.DialogTimeListener {
 
     TextView tvOnceDate;
     TextView tvOnceTime;
@@ -52,10 +54,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 DatePickerFragment datePickerFragment = new DatePickerFragment();
                 datePickerFragment.show(getSupportFragmentManager(), DATE_PICKER_TAG);
                 break;
+
             case R.id.btn_once_time:
                 TimePickerFragment timePickerFragmentOne = new TimePickerFragment();
                 timePickerFragmentOne.show(getSupportFragmentManager(), TIME_PICKER_ONCE_TAG);
                 break;
+
             case R.id.btn_set_once_alarm:
                 String onceDate = tvOnceDate.getText().toString();
                 String onceTime = tvOnceTime.getText().toString();
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
         switch (tag) {
             case TIME_PICKER_ONCE_TAG:
                 tvOnceTime.setText(dateFormat.format(calendar.getTime()));
